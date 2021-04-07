@@ -13,8 +13,9 @@ class ColorDetailVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = color ?? .black
+        title = color?.accessibilityName
         
         print(view.backgroundColor!)
     }

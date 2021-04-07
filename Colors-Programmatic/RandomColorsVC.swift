@@ -11,7 +11,6 @@ class RandomColorsVC: UIViewController {
     
     var colors: [UIColor] = []
     var tableView: UITableView = UITableView()
-    var colorDetailVC = ColorDetailVC()
     
     struct Cells {
         static let colorCell = "ColorCell"
@@ -22,8 +21,7 @@ class RandomColorsVC: UIViewController {
         self.title = "Colors"
         
         //set up UI
-        configureUI()
-        
+        configureTableView()
         populateColors()
     }
     
@@ -33,31 +31,17 @@ class RandomColorsVC: UIViewController {
         }
     }
     
-    func configureUI(){
-        configureTableView()
-    }
-    
     func configureTableView() {
         view.addSubview(tableView)
         
-        setTableViewDelegates()
+        tableView.delegate = self
+        tableView.dataSource = self
         
         tableView.rowHeight = 50
         tableView.register(ColorCell.self, forCellReuseIdentifier: Cells.colorCell)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .systemBackground
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-    }
-    
-    func setTableViewDelegates() {
-        tableView.delegate = self
-        tableView.dataSource = self
+        tableView.frame = view.bounds
     }
 }
 
@@ -70,14 +54,13 @@ extension RandomColorsVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cells.colorCell) as! ColorCell
         cell.set(color: colors[indexPath.row])
-        
+        cell.contentView.backgroundColor = colors[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //print(colors[indexPath.row])
+        let colorDetailVC = ColorDetailVC()
         colorDetailVC.color = colors[indexPath.row]
         show(colorDetailVC, sender: nil)
     }
-    
 }
